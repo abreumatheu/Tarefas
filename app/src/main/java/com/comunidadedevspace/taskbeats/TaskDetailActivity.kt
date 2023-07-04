@@ -41,6 +41,11 @@ class TaskDetailActivity : AppCompatActivity() {
         val edtDescription = findViewById<EditText>(R.id.edt_task_description)
         btnDone = findViewById<Button>(R.id.btn_done)
 
+        if(task != null){
+            edtTitle.setText(task!!.title)
+            edtDescription.setText(task!!.description)
+        }
+
         btnDone.setOnClickListener{
             val title = edtTitle.text.toString()
             val desc = edtDescription.text.toString()
