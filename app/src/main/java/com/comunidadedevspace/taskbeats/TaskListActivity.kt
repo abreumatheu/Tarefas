@@ -18,11 +18,14 @@ class MainActivity : AppCompatActivity() {
         Task(0,"Academia", "Sempre malhar de segunda a sexta"),
         Task(1,"Trabalho", "Sempre chegar no horario"),
         Task(2,"Lazer", "Nunca se atrasar"),
+        Task(3,"Familia", "Nunca se atrasar"),
     )
 
     private lateinit var ctnContent: LinearLayout
 
-    private val adapter: TaskListAdapter= TaskListAdapter(::onListItemClicked)
+    private val adapter: TaskListAdapter by lazy{
+        TaskListAdapter(::onListItemClicked)
+    }
 
 
     val startForResult = registerForActivityResult(
@@ -55,13 +58,26 @@ class MainActivity : AppCompatActivity() {
                         addAll(taskList)
                     }
                 newList.add(task)
-
                 showMessage(ctnContent, "Tarefa ${task.title} Adicionada")
 
                 adapter.submitList(newList)
                 taskList = newList
-            }
+            }else if(taskAction.actionType == ActionType.UPDATE.name){
 
+                val tempEmptyList = arrayListOf<Task>()
+                taskList.forEach {
+                    if (it.id == task.id){
+                        val newItem = Task(it.id, task.title, task.description)
+                        tempEmptyList.add(newItem)
+                    } else {
+                        tempEmptyList.add(it)
+                    }
+                }
+
+                showMessage(ctnContent, "Tarefa ${task.title} Alterada")
+                adapter.submitList(tempEmptyList)
+                taskList = tempEmptyList
+            }
 
         }
     }

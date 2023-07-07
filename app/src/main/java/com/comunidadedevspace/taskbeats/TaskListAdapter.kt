@@ -31,6 +31,7 @@ class TaskListAdapter(
 
         override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean {
             return oldItem == newItem
+
         }
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
