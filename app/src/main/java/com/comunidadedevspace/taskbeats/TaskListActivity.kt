@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         Task(3,"Familia", "Nunca se atrasar"),
         Task(4,"Familia", "Nunca se atrasar"),
         Task(5,"Familia", "Nunca se atrasar"),
+        Task(6,"Familia", "Nunca se atrasar"),
     )
 
     private lateinit var ctnContent: LinearLayout
