@@ -11,7 +11,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tarefa:"/>
+        android:text="Tarefa:"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
     
     <EditText
         android:id="@+id/edt_task_title"
@@ -23,7 +25,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Descrição:"/>
+        android:text="Descrição:"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/edt_task_description"
