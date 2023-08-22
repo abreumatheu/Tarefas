@@ -7,8 +7,12 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import java.io.Serializable
 
 @Suppress("DEPRECATION")
@@ -30,6 +34,16 @@ class MainActivity : AppCompatActivity() {
         TaskListAdapter(::onListItemClicked)
     }
 
+    private val dataBase by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            AppDataBase::class.java, "tarefas-database"
+        ).build()
+    }
+
+    private val dao by lazy {
+        dataBase.taskDao()
+    }
 
     val startForResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -56,15 +70,7 @@ class MainActivity : AppCompatActivity() {
                 taskList = newList
 
             }else if (taskAction.actionType == ActionType.CREATE.name){
-                val newList = arrayListOf<Task>()
-                    .apply{
-                        addAll(taskList)
-                    }
-                newList.add(task)
-                showMessage(ctnContent, "Tarefa ${task.title} Adicionada")
-
-                adapter.submitList(newList)
-                taskList = newList
+                insertIntoDataBase(task)
             }else if(taskAction.actionType == ActionType.UPDATE.name){
 
                 val tempEmptyList = arrayListOf<Task>()
@@ -90,8 +96,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_task_list)
 
 
+
+
+
+
+        listFromDataBase()
         ctnContent = findViewById(R.id.ctn_content)
-        adapter.submitList(taskList)
+
+
 
         val rvTasks :RecyclerView = findViewById(R.id.rv_task_list)
         rvTasks.adapter = adapter
@@ -103,6 +115,19 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun insertIntoDataBase(task: Task){
+        CoroutineScope(context = IO).launch {
+            dao.insert(task)
+        }
+    }
+
+    private fun listFromDataBase(){
+        CoroutineScope(context = IO).launch {
+
+            val myDataBaseList: List<Task> = dao.getAll()
+            adapter.submitList(myDataBaseList)
+        }
+    }
     private fun showMessage(view: View, message:String ){
         Snackbar.make(view,message, Snackbar.LENGTH_LONG)
             .setAction("Action", null)
